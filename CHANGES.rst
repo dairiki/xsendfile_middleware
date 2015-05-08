@@ -2,8 +2,8 @@
 Changes
 =======
 
-Next Release
-============
+0.1a3 (2015-05-08)
+==================
 
 Brown bag.  The previous release was unusable do to this bug:
 
