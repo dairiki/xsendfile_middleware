@@ -9,6 +9,10 @@ import os
 import sys
 import unittest
 
+if sys.version_info >= (3, 0):
+    unichr = chr                # pragma: no cover
+
+
 class Test_xsendfile_middleware(unittest.TestCase):
     def make_filter(self, app):
         from xsendfile_middleware import xsendfile_middleware
@@ -135,8 +139,11 @@ class Test_map_filename(unittest.TestCase):
         self.assertEqual(uri, None)
 
     def test_non_ascii_filename(self):
-        filename = u'/ø/'
-        uri = self.call_it(filename, u'/ø/=/o/'.encode('utf8'))
+        filename = '/' + unichr(0xf8) + '/'
+        redirect_map = filename + '=/o/'
+        # Convert to PEP-3333 "string of bytes"
+        redirect_map = redirect_map.encode('utf8').decode('latin1')
+        uri = self.call_it(filename, redirect_map)
         self.assertEqual(uri, None)
 
 # Ripped-off from pyramid
