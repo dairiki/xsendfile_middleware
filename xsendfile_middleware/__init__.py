@@ -80,8 +80,9 @@ def xsendfile_middleware(application):
 def _map_filename(filename, redirect_map):
     filename = os.path.abspath(filename)
     try:
-        filename = filename.encode('ascii')
+        filename.encode('ascii')
     except UnicodeEncodeError:
+        log.info("Not mapping file with non-ASCII name %r", filename)
         return None
 
     for mapping in redirect_map.split(','):
