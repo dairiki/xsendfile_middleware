@@ -69,7 +69,7 @@ class Test_xsendfile_middleware(unittest.TestCase):
                 raise DummyException()
             except Exception:
                 start_response("200 Okay", [], sys.exc_info())
-            return iter([])
+            return iter([])     # pragma: no cover
         filtered_app = self.make_filter(exc_app)
         environ = {'X_REDIRECT_MAP': '/'}
         self.assertRaises(DummyException, get_response, filtered_app, environ)
@@ -86,7 +86,7 @@ class Test_xsendfile_middleware(unittest.TestCase):
         def broken_app(environ, start_response):
             start_response("200 Okay", [])
             start_response("200 Okay", [])
-            return iter([])
+            return iter([])     # pragma: no cover
         filtered_app = self.make_filter(broken_app)
         environ = {'X_REDIRECT_MAP': '/'}
         self.assertRaises(StartResponseCalledTwice,
