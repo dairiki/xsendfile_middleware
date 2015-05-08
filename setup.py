@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
-import sys, os
+import os
 
-version = '0.1a1'
+version = '0.1a2'
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
@@ -20,7 +20,13 @@ setup(name='xsendfile_middleware',
           'Intended Audience :: Developers',
           'Intended Audience :: System Administrators',
           'License :: OSI Approved :: BSD License',
-          'Programming Language :: Python :: 2',
+          'Programming Language :: Python :: 2.6',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3.2',
+          'Programming Language :: Python :: 3.3',
+          'Programming Language :: Python :: 3.4',
+          'Programming Language :: Python :: Implementation :: CPython',
+          'Programming Language :: Python :: Implementation :: PyPy',
           'Topic :: Internet :: WWW/HTTP :: WSGI :: Middleware',
           ],
       keywords='wsgi middleware paste x-accel-redirect nginx file_wrapper',
