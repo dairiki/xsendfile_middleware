@@ -3,3 +3,4 @@
 /.coverage
 /xsendfile_middleware.egg-info/
 /dist/
+/.tox/
