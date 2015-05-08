@@ -67,7 +67,7 @@ class Test_xsendfile_middleware(unittest.TestCase):
         def exc_app(environ, start_response):
             try:
                 raise DummyException()
-            except AssertionError:
+            except Exception:
                 start_response("200 Okay", [], sys.exc_info())
             return iter([])
         filtered_app = self.make_filter(exc_app)
