@@ -175,7 +175,7 @@ def get_response(app, environ=None):
 
     def start_response(status, response_headers, exc_info=None):
         if exc_info and not output:
-            raise exc_info[0], exc_info[1], exc_info[2]
+            reraise(*exc_info)
         elif response:
             raise StartResponseCalledTwice()
 
@@ -210,3 +210,12 @@ class StartResponseCalledTwice(AssertionError):
 
 class StartResponseNeverCalled(AssertionError):
     pass
+
+
+def reraise(typ, value, tb):    # pragma: no cover
+    # python 2/3 compatibility
+    if sys.version_info < (3, 0):
+        exec("raise typ, value, tb")
+    else:
+        assert value.__traceback__ is tb
+        raise value
