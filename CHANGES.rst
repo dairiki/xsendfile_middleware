@@ -5,7 +5,10 @@ Changes
 Next Release
 ============
 
-No changes yet
+Brown bag.  The previous release was unusable do to this bug:
+
+* Make sure not to include unicode strings in the headers passed to
+  ``start_response``.
 
 0.1a2 (2015-05-08)
 ==================

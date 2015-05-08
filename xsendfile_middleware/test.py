@@ -9,8 +9,11 @@ import os
 import sys
 import unittest
 
-if sys.version_info >= (3, 0):
-    unichr = chr                # pragma: no cover
+if sys.version_info >= (3, 0):  # pragma: no cover
+    unichr = chr
+    text_type = str
+else:
+    text_type = unicode
 
 
 class Test_xsendfile_middleware(unittest.TestCase):
@@ -34,6 +37,18 @@ class Test_xsendfile_middleware(unittest.TestCase):
         content_length = [value for name, value in headers
                          if name.lower() == 'content-length']
         self.assertEqual(content_length, [])
+
+    def test_headers_are_strs(self):
+        def file_app(environ, start_response):
+            file = DummyFile(name='/path/fn')
+            start_response('200 Okay', [])
+            return environ['wsgi.file_wrapper'](file, 4096)
+        filtered_app = self.make_filter(file_app)
+        environ = {'X_REDIRECT_MAP': '/path/=/mapped/'}
+        status, headers, app_iter = get_response(filtered_app, environ)
+        for name, value in headers:
+            self.assertTrue(isinstance(value, str))
+            self.assertTrue(isinstance(name, str))
 
     def test_uses_upstream_file_wrapper_if_can_not_redirect(self):
         def file_app(environ, start_response):
@@ -211,7 +226,7 @@ def get_response(app, environ=None):
 
 class DummyFile(object):
     def __init__(self, name):
-        self.name = name
+        self.name = text_type(name)
 
 class DummyFileWrapper(object):
     def __init__(self, file, block_size):

@@ -17,10 +17,13 @@ def filter_app_factory(app, global_config, **local_conf):
 def xsendfile_middleware(application):
     def middleware(environ, start_response):
         redirect_map = environ.get('X_REDIRECT_MAP')
-        if redirect_map and not _is_ascii(redirect_map):
-            log.info("Ignoring non-ASCII value %r for X_REDIRECT_MAP",
-                     redirect_map)
-            redirect_map = None
+        if redirect_map:
+            try:
+                redirect_map = _ascii_str(redirect_map)
+            except NotASCIIError:
+                log.info("Ignoring non-ASCII value %r for X_REDIRECT_MAP",
+                         redirect_map)
+                redirect_map = None
         if not redirect_map:
             return application(environ, start_response)
 
@@ -81,17 +84,32 @@ def xsendfile_middleware(application):
 
     return middleware
 
-def _is_ascii(s):
+class NotASCIIError(Exception):
+    pass
+
+def _ascii_str(s):
+    # According to PEP-3333, all "strings" used in the WSGI protocol
+    # must be of type ``str``, yet they must really be a string of bytes.
+    # This function converts strings to just such ``str``\s.
+    #
+    # As an added bit of paranoia, it ensures that the strings contain
+    # nothing but ASCII characters.  (This restriction could probably
+    # be relaxed, but, ATM, I'm not quite sure what encoding is
+    # appropriate.)
     try:
-        s.encode('ascii')
+        s = s.encode('ascii')
     except UnicodeEncodeError:
-        return False
-    else:
-        return True
+        raise NotASCIIError("%r is not an ASCII string", s)
+    if not isinstance(s, str):
+        # py3k
+        return s.decode('latin1')  # pragma: no cover
+    return s
 
 def _map_filename(filename, redirect_map):
     filename = os.path.abspath(filename)
-    if not _is_ascii(filename):
+    try:
+        filename = _ascii_str(filename)
+    except NotASCIIError:
         log.info("Not mapping file with non-ASCII name %r", filename)
         return None
 
