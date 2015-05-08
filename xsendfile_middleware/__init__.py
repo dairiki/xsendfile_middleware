@@ -17,6 +17,10 @@ def filter_app_factory(app, global_config, **local_conf):
 def xsendfile_middleware(application):
     def middleware(environ, start_response):
         redirect_map = environ.get('X_REDIRECT_MAP')
+        if redirect_map and not _is_ascii(redirect_map):
+            log.info("Ignoring non-ASCII value %r for X_REDIRECT_MAP",
+                     redirect_map)
+            redirect_map = None
         if not redirect_map:
             return application(environ, start_response)
 
@@ -77,11 +81,17 @@ def xsendfile_middleware(application):
 
     return middleware
 
+def _is_ascii(s):
+    try:
+        s.encode('ascii')
+    except UnicodeEncodeError:
+        return False
+    else:
+        return True
+
 def _map_filename(filename, redirect_map):
     filename = os.path.abspath(filename)
-    try:
-        filename.encode('ascii')
-    except UnicodeEncodeError:
+    if not _is_ascii(filename):
         log.info("Not mapping file with non-ASCII name %r", filename)
         return None
 

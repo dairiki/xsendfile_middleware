@@ -57,6 +57,15 @@ class Test_xsendfile_middleware(unittest.TestCase):
         status, headers, app_iter = get_response(filtered_app, {})
         self.assertEqual(status, '200 Okay')
 
+    def test_non_ascii_redirect_map(self):
+        def app(environ, start_response):
+            start_response('200 Okay', [])
+            return iter(['body'])
+        filtered_app = self.make_filter(app)
+        environ = {'X_REDIRECT_MAP': '/path/=/mapped/' + unichr(0xf8)}
+        status, headers, app_iter = get_response(filtered_app, environ)
+        self.assertEqual(status, '200 Okay')
+
     def test_passes_on_calls_to_write(self):
         def writer_app(environ, start_response):
             write = start_response('200 Okay', [])
