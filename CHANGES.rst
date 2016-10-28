@@ -2,6 +2,12 @@
 Changes
 =======
 
+Next Release
+============
+
+* Drop support for python 3.2.  Now tested under pythons 2.6, 2.7,
+  3.3, 3.4, 3.5, pypy and pypy3.
+
 0.1a3 (2015-05-08)
 ==================
 
