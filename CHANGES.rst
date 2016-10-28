@@ -2,8 +2,18 @@
 Changes
 =======
 
-Next Release
-============
+0.1.1 (2016-10-28)
+==================
+
+(Release 0.1 does not exist.  It had corrupt rST in its PKG-INFO
+causing the README on PyPI not to be formatted.)
+
+No changes (other than test configuration) from 0.1a3.  This package
+has been used in production for years now — might as well drop the
+“alpha” designation.
+
+Testing
+-------
 
 * Drop support for python 3.2.  Now tested under pythons 2.6, 2.7,
   3.3, 3.4, 3.5, pypy and pypy3.

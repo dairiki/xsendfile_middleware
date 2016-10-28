@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.1a4.dev0'
+version = '0.1.1'
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
@@ -11,9 +11,9 @@ setup(name='xsendfile_middleware',
       version=version,
       description="WSGI middleware to send files using X-Accel-Redirect",
       long_description=README + "\n\n" + CHANGES,
-      platforms = ['Any'],
+      platforms=['Any'],
       classifiers=[
-          'Development Status :: 4 - Beta',
+          'Development Status :: 5 - Production/Stable',
           'Environment :: Web Environment',
           'Framework :: Paste',
           'Framework :: Pyramid',
